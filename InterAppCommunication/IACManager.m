@@ -136,10 +136,14 @@ typedef NS_ENUM(NSUInteger, IACResponseType) {
             IACSuccessBlock success = ^(NSDictionary *returnParams, BOOL cancelled) {
                 if (cancelled) {
                     if (parameters[kXCUCancel]) {
-                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:parameters[kXCUCancel]]];
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:parameters[kXCUCancel]]
+														   options:@{}
+												 completionHandler:^(BOOL unused){}];
                     }
                 } else if (parameters[kXCUSuccess]) {
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUSuccess] stringByAppendingURLParams:returnParams]]];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUSuccess] stringByAppendingURLParams:returnParams]]
+													   options:@{}
+											 completionHandler:^(BOOL unused){}];
                 }
             };
             
@@ -149,7 +153,10 @@ typedef NS_ENUM(NSUInteger, IACResponseType) {
                                                    kXCUErrorMessage: [error localizedDescription],
                                                    kIACErrorDomain: [error domain]
                                                    };
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUError] stringByAppendingURLParams:errorParams]]];
+					[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUError] stringByAppendingURLParams:errorParams]]
+													   options:@{}
+											 completionHandler:^(BOOL unused){}];
+
                 }
             };
 
@@ -173,7 +180,9 @@ typedef NS_ENUM(NSUInteger, IACResponseType) {
                                                kXCUErrorMessage: [NSString stringWithFormat:NSLocalizedString(@"'%@' is not an x-callback-url action supported by %@", nil), action, [self localizedAppName]],
                                                kIACErrorDomain: IACErrorDomain
                                              };
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUError] stringByAppendingURLParams:errorParams]]];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[parameters[kXCUError] stringByAppendingURLParams:errorParams]]
+												   options:@{}
+										 completionHandler:^(BOOL unused){}];
                 return YES;
             }
         }
@@ -221,7 +230,10 @@ typedef NS_ENUM(NSUInteger, IACResponseType) {
         
     sessions[request.requestID] = request;
     
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:final_url]];
+	NSURL* url = [NSURL URLWithString:final_url];
+    [[UIApplication sharedApplication] openURL:url
+									   options:@{}
+							 completionHandler:^(BOOL unused){}];
 }
 
 
